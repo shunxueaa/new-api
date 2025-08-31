@@ -23,11 +23,13 @@ COPY . .
 COPY --from=builder /build/dist ./web/dist
 RUN go build -ldflags "-s -w -X 'one-api/common.Version=$(cat VERSION)'" -o one-api
 
-FROM alpine
+FROM alpine:latest
 
-RUN apk upgrade --no-cache \
-    && apk add --no-cache ca-certificates tzdata ffmpeg \
-    && update-ca-certificates
+# 使用非root用户来避免权限问题
+RUN apk update --no-cache \
+    && apk add --no-cache ca-certificates tzdata \
+    && update-ca-certificates \
+    && rm -rf /var/cache/apk/*
 
 COPY --from=builder2 /build/one-api /
 EXPOSE 3000
