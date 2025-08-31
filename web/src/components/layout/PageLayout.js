@@ -1,4 +1,4 @@
-import HeaderBar from './HeaderBar.js';
+import HeaderBarModern from './HeaderBarModern.js';
 import { Layout } from '@douyinfe/semi-ui';
 import SiderBar from './SiderBar.js';
 import App from '../../App.js';
@@ -101,7 +101,7 @@ const PageLayout = () => {
           zIndex: 100,
         }}
       >
-        <HeaderBar onMobileMenuToggle={() => setDrawerOpen(prev => !prev)} drawerOpen={drawerOpen} />
+        <HeaderBarModern onMobileMenuToggle={() => setDrawerOpen(prev => !prev)} drawerOpen={drawerOpen} />
       </Header>
       <Layout
         style={{
@@ -115,11 +115,11 @@ const PageLayout = () => {
             style={{
               position: 'fixed',
               left: 0,
-              top: '64px',
+              top: '80px',
               zIndex: 99,
               border: 'none',
               paddingRight: '0',
-              height: 'calc(100vh - 64px)',
+              height: 'calc(100vh - 80px)',
               width: 'var(--sidebar-current-width)',
             }}
           >
