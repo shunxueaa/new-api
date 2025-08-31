@@ -57,29 +57,34 @@ func ShouldDisableChannel(channelType int, err *types.NewAPIError) bool {
 			return true
 		}
 	}
+	// 安全地获取OpenAI错误信息，避免panic
 	oaiErr := err.ToOpenAIError()
-	switch oaiErr.Code {
-	case "invalid_api_key":
-		return true
-	case "account_deactivated":
-		return true
-	case "billing_not_active":
-		return true
-	case "pre_consume_token_quota_failed":
-		return true
+	if oaiErr.Code != nil {
+		switch fmt.Sprintf("%v", oaiErr.Code) {
+		case "invalid_api_key":
+			return true
+		case "account_deactivated":
+			return true
+		case "billing_not_active":
+			return true
+		case "pre_consume_token_quota_failed":
+			return true
+		}
 	}
-	switch oaiErr.Type {
-	case "insufficient_quota":
-		return true
-	case "insufficient_user_quota":
-		return true
-	// https://docs.anthropic.com/claude/reference/errors
-	case "authentication_error":
-		return true
-	case "permission_error":
-		return true
-	case "forbidden":
-		return true
+	if oaiErr.Type != "" {
+		switch oaiErr.Type {
+		case "insufficient_quota":
+			return true
+		case "insufficient_user_quota":
+			return true
+		// https://docs.anthropic.com/claude/reference/errors
+		case "authentication_error":
+			return true
+		case "permission_error":
+			return true
+		case "forbidden":
+			return true
+		}
 	}
 
 	lowerMessage := strings.ToLower(err.Error())
